@@ -274,7 +274,7 @@ statsmodels==0.13.5
 sympy==1.11.1
 tables==3.7.0
 tabulate==0.8.10
-TBB==0.2
+TBB==2021.2.0
 tblib==1.7.0
 tenacity==8.2.2
 terminado==0.17.1
