@@ -208,10 +208,6 @@ Pygments==2.15.1
 pylint==2.16.2
 pylint-venv==2.3.0
 pyls-spyder==0.4.0
-pyobjc-core==9.0
-pyobjc-framework-Cocoa==9.0
-pyobjc-framework-CoreServices==9.0
-pyobjc-framework-FSEvents==9.0
 pyodbc==4.0.34
 pyOpenSSL==23.0.0
 pyparsing==3.0.9
