@@ -291,9 +291,9 @@ toml==0.10.2
 tomli==2.0.1
 tomlkit==0.11.1
 toolz==0.12.0
-torch==2.1.0.dev20230515
-torchaudio==2.1.0.dev20230515
-torchvision==0.16.0.dev20230515
+torch==1.13.1
+torchaudio==1.13.1
+torchvision==0.14.1
 tornado==6.2
 tqdm==4.65.0
 traitlets==5.7.1
