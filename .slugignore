@@ -1,0 +1,8 @@
+answer_NO_g.py
+answer_YES_g.py
+making_embeddings.py
+passage_rank_GPT.py
+QA_search_gpt.py
+semantic_similarity.py
+faiss_document_store.db
+passage_ranking.db
