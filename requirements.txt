@@ -3,7 +3,6 @@ aiosignal==1.2.0
 alabaster==0.7.12
 anyio==3.5.0
 appdirs==1.4.4
-applaunchservices==0.3.0
 appnope==0.1.2
 appscript==1.1.2
 argon2-cffi==21.3.0
@@ -264,7 +263,6 @@ sphinxcontrib-htmlhelp==2.0.0
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
-spyder==5.4.3
 spyder-kernels==2.4.3
 SQLAlchemy==1.4.39
 sseclient-py==1.7.2
