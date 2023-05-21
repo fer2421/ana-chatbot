@@ -9,6 +9,7 @@ import tiktoken  # for counting tokens
 from scipy import spatial  # for calculating vector similarities for search
 from IPython.display import display
 import csv
+import os
 
 # answer given to the user
 answer = ""
@@ -16,7 +17,7 @@ answer = ""
 # models
 EMBEDDING_MODEL = "text-embedding-ada-002"
 GPT_MODEL = "gpt-3.5-turbo"
-openai.api_key = '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'
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # Embeddings
 embeddings_path = "dementia_info.csv"
