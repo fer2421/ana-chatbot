@@ -14,16 +14,27 @@ import os
 # answer given to the user
 answer = ""
 
+# variables
+strings = None
+relatednesses = None
+indices = None
+
 # models
 EMBEDDING_MODEL = "text-embedding-ada-002"
 GPT_MODEL = "gpt-3.5-turbo"
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # Embeddings
-embeddings_path = "dementia_info.csv"
-df = pd.read_csv(embeddings_path)
+embeddings_path_info = "dementia_info.csv"
+df_info = pd.read_csv(embeddings_path_info)
 # convert embeddings from CSV str type back to list type
-df['embedding'] = df['embedding'].apply(ast.literal_eval)
+df_info['embedding'] = df_info['embedding'].apply(ast.literal_eval)
+
+# Embeddings
+embeddings_path_q = "questions_embeddings.csv"
+df_q = pd.read_csv(embeddings_path_q)
+# convert embeddings from CSV str type back to list type
+df_q['embedding'] = df_q['embedding'].apply(ast.literal_eval)
 
 # Contexts Data
 documents = []
@@ -109,7 +120,10 @@ def query_message(
     token_budget: int
 ) -> str:
     """Return a message for GPT, with relevant source texts pulled from a dataframe."""
-    strings, relatednesses, indices = strings_ranked_by_relatedness(query, df)
+    global strings
+    global relatednesses
+    global indices
+    #strings, relatednesses, indices = strings_ranked_by_relatedness(query, df, top_n=1)
     introduction = 'Use the information below about dementia and caregiving to answer the subsequent question in Spanish. If the answer cannot be found in the text, write "No encontré la respuesta."'
     question = f"\n\nQuestion: {query}"
     message = introduction
@@ -129,7 +143,7 @@ def query_message(
 # Returns GPT's answer
 def ask(
     query: str,
-    df: pd.DataFrame = df,
+    df: pd.DataFrame = df_info,
     model: str = GPT_MODEL,
     token_budget: int = 4096 - 500,
     print_message: bool = False,
@@ -152,13 +166,17 @@ def ask(
 
 def get_answer_Y(user_question):
 
-    most_similar_question, most_similar_value, most_similar_index = find_most_similar_question(user_question, "Question_Dataset_2.csv")
-
-    if most_similar_value >= 0.7:
-        answer = str(answers[most_similar_index + 1])
+    # find the most related question
+    question, relatednesses_q, indices_q = strings_ranked_by_relatedness(user_question, df_q, top_n=1)
+    print(relatednesses_q[0])
+    if float(relatednesses_q[0]) > 0.95:
+        answer = str(answers[indices_q[0]])
     else:
+        global strings
+        global relatednesses
+        global indices
         # find the most related doc
-        strings, relatednesses, indices = strings_ranked_by_relatedness(user_question, df, top_n=1)
+        strings, relatednesses, indices = strings_ranked_by_relatedness(user_question, df_info, top_n=1)
         # if the relatedness is above threshold then that topic is relevant for the answer to the user
         if float(relatednesses[0]) > 0.8:
             answer = ask(user_question) + f"\n Esta respuesta proviene de: {sources[indices[0]]}"
@@ -169,13 +187,17 @@ def get_answer_Y(user_question):
 
 def get_answer_N(user_question):
 
-    most_similar_question, most_similar_value, most_similar_index = find_most_similar_question(user_question, "Question_Dataset_2.csv")
-
-    if most_similar_value >= 0.7:
-        answer = str(answers[most_similar_index + 1])
+    # find the most related question
+    question, relatednesses_q, indices_q = strings_ranked_by_relatedness(user_question, df_q, top_n=1)
+    print(relatednesses_q[0])
+    if float(relatednesses_q[0]) > 0.95:
+        answer = str(answers[indices_q[0]])
     else:
+        global strings
+        global relatednesses
+        global indices
         # find the most related doc
-        strings, relatednesses, indices = strings_ranked_by_relatedness(user_question, df, top_n=1)
+        strings, relatednesses, indices = strings_ranked_by_relatedness(user_question, df_info, top_n=1)
         # if the relatedness is above threshold then that topic is relevant for the answer to the user
         if float(relatednesses[0]) > 0.8:
             answer = f"No puedo responder tu pregunta pero creo que este documento sobre {low_level_topics[indices[0]]} te puede ayudar: {sources[indices[0]]}" 

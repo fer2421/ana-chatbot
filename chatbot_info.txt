@@ -1,0 +1,28 @@
+﻿Creadores del chatbot
+¿Quiénes crearon el chatbot? ¿Quiénes inventaron el chatbot? ¿Quiénes son responsables del chatbot?
+El chatbot fue diseñado y creado por investigadores en una universidad en Londres (Imperial College London) en colaboración con investigadores peruanos en la UCH (Universidad Cayetano Heredia) y medicos investigadores en la IPN (Instituto Peruano de Neurociencias) en base a contenido creado por la IPN y investigadores medicos de la Universidad de San Francisco.
+
+Contenido
+¿De donde viene el conocimiento del chatbot? ¿En que contenido esta basado el chatbot? ¿Sobre que informacion esta basado el chatbot?
+El chatbot ha sido desarrollado usando el contenido del libro: Reconociendo los síntomas en pacientes con demencia, escrito por Nilton Custodio y Rosa Montesinos, doctores peruanos, y también usando el contenido desarrollado por doctores en San Francisco para un proyecto llamado Care Ecosystem.
+
+Verificacion
+¿La informacion que da el chatbot esta respaldada por algun medico? ¿La informacion del chatbot ha sido verificida? ¿Que tan segura es la informacion que me da el chatbot?
+El chatbot esta basado en información que sí ha sido verificada y aprobada. Sin embargo, las respuestas específicas que te da el chatbot todavía están en el proceso de ser verificadas por profesionales de salud.
+
+Seguridad
+¿La informacion que viene del chatbot es segura? ¿Deberia seguir lo que me dice el chatbot al pie de la letra?
+El chatbot te da información en base a contenido verificado y aprobado por doctores. Sin embargo, la información que te brinda son consejos y recomendaciones que buscan ayudarte pero si crees que no aplican a tu situación o no se adapta a tu contexto, no deberías seguirlo al pie de la letra. El chatbot busca darte esta información como sugerencias y si tienes consultas medicas deberías agendar una cita con un medico.
+
+Proposito
+¿Cual es el proposito del chatbot? ¿Por que crearon este chatbot?
+El chatbot ha sido creado con el propósito de apoyar a cuidadores de personas con demencia. El chatbot se enfoca en ayudar al cuidador dandole acceso a información, orientación en servicios de salud, y  soporte emocional. La intención es crear un servicio que se enfoque en el bienestar del cuidador.
+
+Privacidad
+¿Cuales son mis derechos de privacidad cuando hablo con el chatbot?
+En la conversación que tienes con el chatbot, cualquier mensaje, información, o dato que compartas serán protegidos dentro de la Ley de Protección de Datos N ° 29733.
+
+Usuario Objetivo
+¿El chatbot es solo para cuidadores? ¿Quienes pueden usar este chatbot?
+El chatbot esta diseñado para ser usado solo para cuidadores.
+

@@ -9,27 +9,36 @@ from scipy import spatial  # for calculating vector similarities for search
 from IPython.display import display
 import csv
 import os
+import time
+
+
 
 # answer given to the user
 answer = ""
+
+# variables
+strings = None
+relatednesses = None
+indices = None
 
 # models
 EMBEDDING_MODEL = "text-embedding-ada-002"
 GPT_MODEL = "gpt-3.5-turbo"
 openai.api_key = os.environ["OPENAI_API_KEY"]
-
 key = "OPENAI_API_KEY"
-if key in os.environ:
-    print(f"{key} is set")
-    print(f"Value: {os.environ[key]}")
-else:
-    print(f"{key} is not set")
+
 
 # Embeddings
-embeddings_path = "dementia_info.csv"
-df = pd.read_csv(embeddings_path)
+embeddings_path_info = "dementia_info.csv"
+df_info = pd.read_csv(embeddings_path_info)
 # convert embeddings from CSV str type back to list type
-df['embedding'] = df['embedding'].apply(ast.literal_eval)
+df_info['embedding'] = df_info['embedding'].apply(ast.literal_eval)
+
+# Embeddings
+embeddings_path_q = "questions_embeddings.csv"
+df_q = pd.read_csv(embeddings_path_q)
+# convert embeddings from CSV str type back to list type
+df_q['embedding'] = df_q['embedding'].apply(ast.literal_eval)
 
 # Contexts Data
 documents = []
@@ -52,32 +61,6 @@ with open("Question_Dataset_2.csv", 'r', encoding='utf-8') as file:
         questions.append(row[0].strip())
         answers.append(row[1].strip())
         low_level_topics_Q.append(row[2].strip())
-
-# function to find the most similar question in the approved db
-def find_most_similar_question(user_question, csv_file):
-    # Read the CSV file into a pandas DataFrame
-    df = pd.read_csv(csv_file)
-
-    # Load the multilingual NLP model
-    model = SentenceTransformer('sentence-transformers/paraphrase-xlm-r-multilingual-v1')
-
-    # Encode the user question and all the questions from the CSV file
-    question_embeddings = model.encode(df.iloc[:, 0].values.tolist() + [user_question])
-
-    # Calculate the cosine similarity between the user question and all the questions
-    similarities = cosine_similarity([question_embeddings[-1]], question_embeddings[:-1])[0]
-
-    # Find the index of the most similar question
-    most_similar_index = similarities.argmax()
-
-    # Retrieve the cosine similarity value of the most similar question
-    most_similar_value = similarities[most_similar_index]
-    
-    # Retrieve the most similar question from the DataFrame
-    most_similar_question = df.iloc[most_similar_index, 0]
-
-    return most_similar_question, most_similar_value, most_similar_index
-
 
 # search function
 def strings_ranked_by_relatedness(
@@ -115,8 +98,11 @@ def query_message(
     token_budget: int
 ) -> str:
     """Return a message for GPT, with relevant source texts pulled from a dataframe."""
-    strings, relatednesses, indices = strings_ranked_by_relatedness(query, df)
-    introduction = 'Use the information below about dementia and caregiving to answer the subsequent question in Spanish. If the answer cannot be found in the text, write "No encontré la respuesta."'
+    #strings, relatednesses, indices = strings_ranked_by_relatedness(query, df, top_n=1)
+    global strings
+    global relatednesses
+    global indices
+    introduction = 'Use the information below about dementia and caregiving to answer the subsequent question in Spanish in less than 100 words. If the answer cannot be found in the text, write "No encontré la respuesta."'
     question = f"\n\nQuestion: {query}"
     message = introduction
     for string in strings:
@@ -135,24 +121,27 @@ def query_message(
 # Returns GPT's answer
 def ask(
     query: str,
-    df: pd.DataFrame = df,
+    df: pd.DataFrame = df_info,
     model: str = GPT_MODEL,
     token_budget: int = 4096 - 500,
     print_message: bool = False,
 ) -> str:
     """Answers a query using GPT and a dataframe of relevant texts and embeddings."""
     message = query_message(query, df, model=model, token_budget=token_budget)
+    print("hi")
     if print_message:
         print(message)
     messages = [
-        {"role": "system", "content": "You help dementia caregivers by answering questions about dementia in Spanish in less than 100 words."},
+        {"role": "system", "content": "You help dementia caregivers by answering questions about dementia."},
         {"role": "user", "content": message},
     ]
     response = openai.ChatCompletion.create(
         model=model,
         messages=messages,
-        temperature=0.2
+        temperature=0.6,
+        #max_tokens=512
     )
+    print("bye")
     response_message = response["choices"][0]["message"]["content"]
     return response_message
 
@@ -163,13 +152,18 @@ print(answer)
 
 def get_answer(user_question):
 
-    most_similar_question, most_similar_value, most_similar_index = find_most_similar_question(user_question, "Question_Dataset_2.csv")
-
-    if most_similar_value >= 0.8:
-        answer = str(answers[most_similar_index + 1])
+    # find the most related question
+    question, relatednesses_q, indices_q = strings_ranked_by_relatedness(user_question, df_q, top_n=1)
+    print(relatednesses_q[0])
+    if float(relatednesses_q[0]) > 0.95:
+        answer = str(answers[indices_q[0]])
     else:
         # find the most related doc
-        strings, relatednesses, indices = strings_ranked_by_relatedness(user_question, df, top_n=1)
+        global strings
+        global relatednesses
+        global indices
+        strings, relatednesses, indices = strings_ranked_by_relatedness(user_question, df_info, top_n=1)
+        print(relatednesses[0])
         # if the relatedness is above threshold then that topic is relevant for the answer to the user
         if float(relatednesses[0]) > 0.8:
             answer = ask(user_question) + f"\n Esta respuesta proviene de: {sources[indices[0]]}"
@@ -178,8 +172,12 @@ def get_answer(user_question):
 
     return answer
 
-user_q = "Como puedo ayudar a la persona con demencia a que sea menos apatica y se levante a hacer cosas?"
-text = get_answer(user_q)
 
+user_q = "Como puedo ayudar a la persona con demencia a ser menos apatica y a que se levante a hacer cosas?"
+start = time.time()
+text = get_answer(user_q)
+done = time.time()
+elapsed = done - start
 print("Question: " + user_q)
 print("Answer: " + text)
+print(elapsed)
