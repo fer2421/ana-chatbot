@@ -177,7 +177,7 @@ def get_answer_Y(user_question):
         # find the most related doc
         strings, relatednesses, indices = strings_ranked_by_relatedness(user_question, df_info, top_n=1)
         # if the relatedness is above threshold then that topic is relevant for the answer to the user
-        if float(relatednesses[0]) > 0.8:
+        if float(relatednesses[0]) >= 0.8:
             answer = ask(user_question) + f"\n Esta respuesta proviene de: {sources[indices[0]]}"
         else:
             answer = "Perdón, no puedo responder tu pregunta."
@@ -197,7 +197,7 @@ def get_answer_N(user_question):
         # find the most related doc
         strings, relatednesses, indices = strings_ranked_by_relatedness(user_question, df_info, top_n=1)
         # if the relatedness is above threshold then that topic is relevant for the answer to the user
-        if float(relatednesses[0]) > 0.8:
+        if float(relatednesses[0]) >= 0.8:
             answer = f"No puedo responder tu pregunta pero creo que este documento sobre {low_level_topics[indices[0]]} te puede ayudar: {sources[indices[0]]}" 
         else:
             answer = "Perdón, no puedo responder tu pregunta."
