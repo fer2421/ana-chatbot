@@ -167,9 +167,10 @@ def ask(
 def get_answer_Y(user_question):
 
     # find the most related question
-    most_similar_question, most_similar_value, most_similar_index = find_most_similar_question(user_question, "Question_Dataset_2.csv")
-    if most_similar_value >= 0.9:
-        answer = str(answers[most_similar_index + 1])
+    question, relatednesses_q, indices_q = strings_ranked_by_relatedness(user_question, df_q, top_n=1)
+    print(relatednesses_q[0])
+    if float(relatednesses_q[0]) > 0.95:
+        answer = str(answers[indices_q[0]])
     else:
         global strings
         global relatednesses
@@ -187,9 +188,10 @@ def get_answer_Y(user_question):
 def get_answer_N(user_question):
 
     # find the most related question
-    most_similar_question, most_similar_value, most_similar_index = find_most_similar_question(user_question, "Question_Dataset_2.csv")
-    if most_similar_value >= 0.9:
-        answer = str(answers[most_similar_index + 1])
+    question, relatednesses_q, indices_q = strings_ranked_by_relatedness(user_question, df_q, top_n=1)
+    print(relatednesses_q[0])
+    if float(relatednesses_q[0]) > 0.95:
+        answer = str(answers[indices_q[0]])
     else:
         global strings
         global relatednesses
